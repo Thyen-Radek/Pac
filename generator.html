@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: black;
+        }
+
+        .lewa {
+            border: 1px dotted white;
+            float: left;
+            opacity: 30%;
+            margin: 1px;
+            cursor:pointer;
+        }
+
+        .lewa:nth-child(16n+1) {
+            border: 1px dotted white;
+            clear: both;
+            opacity: 30%;
+            margin: 1px;
+            cursor:pointer;
+        }
+
+        .lewa:hover {
+            border-color: red;
+            opacity: 100%;
+        }
+
+        .cp {
+            border: dotted 1px white;
+            float: left;
+            position: relative;
+            z-index: 0;
+            background-color: black;
+            margin: 1px;
+            cursor:pointer;
+        }
+
+        .cp:hover {
+            opacity: 50%;
+            border-color: red;
+        }
+
+        .cp_h {
+            background-color: rgb(0, 0, 0);
+            border-color: red;
+            position: relative;
+            z-index: 0;
+            opacity: 50%;
+        }
+
+        .lewy {
+            position: absolute;
+            top: 50px;
+            left: 5px;
+        }
+        #lewek {
+            position: absolute;
+            top: 0px;
+            left: 5px;
+            width: 448px;
+            height: 50px;
+            display:flex;
+            justify-content: center;
+            align-items: center;
+            z-index:4;
+            cursor:default;
+            color:white;
+        }
+        .prawy {
+            position: absolute;
+            top: 50px;
+            left: 500px;
+            width: 1316px;
+            z-index: 0;
+        }
+        #prawek {
+            position: absolute;
+            top: 0px;
+            left: 500px;
+            width: 1316px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #div {
+            border: 1px dotted #000;
+            position: absolute;
+            background-color: red;
+            opacity: 50%;
+            z-index: 1;
+        }
+
+        #overlay {
+            position: fixed;
+            display: none;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2;
+            cursor: pointer;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #menu {
+            width: 300px;
+            height: 400px;
+            background-color: white;
+            position: fixed;
+            opacity: 90%;
+        }
+
+        .menu {
+            width: 298px;
+            height: 48px;
+            border: 1px dotted black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .menu:hover {
+            opacity: 90%;
+            background-color: lightgray;
+        }
+
+        .mniejsze {
+            width: 149px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mniejsze1 {
+            width: 149px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #automat {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            top: 0px;
+            width: 80px;
+            height: 50px;
+            color: white;
+            z-index: 2;
+        }
+
+        label {
+            width: 100px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        input {
+            cursor: pointer;
+        }
+
+        .cp_wklej {
+            border: 1px solid green;
+            position: absolute;
+            z-index: 3;
+            cursor: pointer;
+        }
+
+        #file {
+            position: absolute;
+            z-index: 5;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="lewek">Itemki</div>
+    <div id="prawek"><div id="automat"><label for="Automat">Automat</label><input id="check" type="checkbox" id="scales" name="scales"></div>
+    </div>
+    <div id="div" hidden></div>
+    <div id="overlay">
+        <div id="menu">
+            <div class="menu">
+                <div class="mniejsze">Undo</div>
+                <div class="mniejsze1">CTRL + Z</div>
+            </div>
+            <div class="menu">
+                <div class="mniejsze">Redo</div>
+                <div class="mniejsze1">CTRL + Y</div>
+            </div>
+            <div class="menu">
+                <div class="mniejsze">Cut</div>
+                <div class="mniejsze1">CTRL + X</div>
+            </div>
+            <div class="menu">
+                <div class="mniejsze">Copy</div>
+                <div class="mniejsze1">CTRL + C</div>
+            </div>
+            <div class="menu">
+                <div class="mniejsze">Paste</div>
+                <div class="mniejsze1">CTRL + V</div>
+            </div>
+            <div class="menu">
+                <div class="mniejsze">Delete</div>
+                <div class="mniejsze1">Del</div>
+            </div>
+            <div class="menu">
+                <div class="mniejsze">Save to file</div>
+                <div class="mniejsze1">CTRL + S</div>
+            </div>
+            <div class="menu">
+                <div class="mniejsze">Load data from file</div>
+                <div class="mniejsze1">CTRL + L</div>
+            </div>
+        </div>
+    </div>
+    <script>
+        class Generator {
+            constructor(img, height, width) {
+                this.img = img;
+                this.height = height;
+                this.width = width;
+                console.log(this)
+                this.tab = []
+                this.tablica = []
+                this.tbx = []
+                this.tby = []
+                this.tbleft = []
+                this.tbtop = []
+                this.table = []
+                this.tablex = []
+                this.tablexp = []
+                this.tabley = []
+                this.tableyp = []
+                this.tablet = []
+                this.tablec = []
+                this.liczba = 0
+                this.generuj_lewa();
+                this.generuj_prawa();
+                this.left1 = 0;
+                this.top1 = 0
+                this.mousemove();
+                this.over()
+                this.zmien();
+                document.onkeydown = (e) => { key_down(e, this) };
+                document.onkeyup = (e) => { key_up(e, this) };
+                this.zmienna = false;
+                function key_down(e, dis) {
+                    if (e.code == "ControlLeft" || e.code == "Meta") {
+                        dis.zmienna = true
+                    }
+                    if (dis.zmienna == true && e.code == "KeyC") {
+                        dis.copy()
+                    }
+                    if (dis.zmienna == true && e.code == "KeyX") {
+                        dis.cut()
+                    }
+                    if (dis.zmienna == true && e.code == "KeyV") {
+                        dis.paste()
+                    }
+                    if (dis.zmienna == true && e.code == "KeyZ") {
+                        dis.undo()
+                    }
+                    if (dis.zmienna == true && e.code == "KeyY") {
+                        dis.redo()
+                    }
+                    if (dis.zmienna == true && e.code == "KeyS") {
+                        dis.save()
+                        e.preventDefault()
+                    }
+                    if (dis.zmienna == true && e.code == "KeyL") {
+                        e.preventDefault()
+                        dis.load()
+                    }
+                    if (e.code == "Delete") {
+                        dis.delete()
+                    }
+                    if (e.code == "Escape") {
+                        dis.esc()
+                    }
+                }
+                function key_up(e, dis) {
+                    if (e.code == "ControlLeft" || e.code == "Meta") {
+                        dis.zmienna = false
+                    }
+                }
+            }
+            zmien(){
+                let el = document.getElementById("div")
+                const myTimer1 = (ev) => {
+                    let x = Math.floor(Math.random() * 256)
+                    let y = Math.floor(Math.random() * 256)
+                    let z = Math.floor(Math.random() * 256)
+                    // console.log(x,y,z)
+                    el.style["background-color"] = "rgb("+ x +"," + y +"," + z +")"
+                }
+                let myvar1 = setInterval(myTimer1, 250); 
+            }
+            over() {
+                let el = document.getElementsByClassName("menu")
+                el[0].onclick = (e) => {
+                    this.undo()
+                }
+                el[1].onclick = (e) => {
+                    this.redo()
+                }
+                el[2].onclick = (e) => {
+                    this.cut()
+                }
+                el[3].onclick = (e) => {
+                    this.copy()
+                }
+                el[4].onclick = (e) => {
+                    this.paste()
+                }
+                el[5].onclick = (e) => {
+                    this.delete()
+                }
+                el[6].onclick = (e) => {
+                    this.save()
+                    e.preventDefault()
+                }
+                el[7].onclick = (e) => {
+                    this.load()
+                    e.preventDefault()
+                }
+            }
+            mousemove() {
+                document.addEventListener('mousemove', (event) => {
+                    this.left1 = event.pageX - 500
+                    this.top1 = event.pageY - 50
+                })
+            }
+            save() {
+                let el = document.getElementsByClassName("cp")
+                let tablica = []
+                let tablica1 = []
+                let tablica2 = []
+                tablica.push(tablica1, tablica2)
+                for (let x = 0; x < el.length; x++) {
+                    let jj = el[x].dataset.leftcan
+                    let obj = { "lewa": jj }
+                    let jj1 = el[x].dataset.topcan
+                    let obj1 = { "gora": jj1 }
+                    tablica1.push(obj)
+                    tablica2.push(obj1)
+                }
+                tablica = JSON.stringify(tablica)
+                let blob = new Blob([tablica], { type: "text/plain" });
+                download(blob, "file.json")
+                function download(blob, name) {
+                    var url = URL.createObjectURL(blob),
+                        div = document.createElement("div"),
+                        anch = document.createElement("a");
+                    document.body.appendChild(div);
+                    div.appendChild(anch);
+                    anch.innerHTML = "&nbsp;";
+                    div.style.width = "0";
+                    div.style.height = "0";
+                    anch.href = url;
+                    anch.download = name;
+                    var ev = new MouseEvent("click", {});
+                    anch.dispatchEvent(ev);
+                    document.body.removeChild(div);
+                }
+            }
+            load() {
+                let input = document.createElement('input');
+                input.id = "file"
+                input.type = "file"
+                input.accept = "application/json"
+                input.hidden = 1
+                document.body.appendChild(input)
+                console.log(input)
+                document.getElementById('file').click()
+                let klik = document.getElementById('file')
+                var file = document.getElementById('file')
+                let fil
+                const myTimer = (ev) => {
+                    fil = file.files[0]
+                    if (fil) {
+                        getAsText(fil);
+                    }
+                }
+                let myVar = setInterval(myTimer, 100);
+                function myStopFunction() {
+                    clearInterval(myVar);
+                }
+                const getAsText = (readFile) => {
+                    let reader = new FileReader();
+                    reader.readAsText(readFile, "UTF-8");
+                    reader.onload = (e) => {
+                        myStopFunction()
+                        var wynik = JSON.parse(e.target.result)
+                        console.log(wynik)
+                        var can = document.getElementsByClassName("cp")
+                        var le = document.getElementsByClassName("lewa")
+                        this.tablex = []
+                        this.tabley = []
+                        this.tablec = []
+                        this.tablet = []
+                        this.tablexp = []
+                        this.tableyp = []
+                        this.table.splice(this.liczba)
+                        for (let x = 0; x < can.length; x++) {
+                            let lef = wynik[0][x].lewa
+                            let tof = wynik[1][x].gora
+                            for (let c = 0; c < le.length; c++) {
+                                if (lef == le[c].offsetLeft && tof == le[c].offsetTop) {
+                                    this.tablexp.push(can[x].dataset.leftcan)
+                                    this.tableyp.push(can[x].dataset.topcan)
+                                    can[x].dataset.topcan = tof
+                                    can[x].dataset.leftcan = lef
+                                    can[x].getContext("2d").drawImage(le[c], 0, 0, this.width, this.height, 0, 0, this.width, this.height);
+                                    this.tablex.push(can[x].dataset.leftcan)
+                                    this.tabley.push(can[x].dataset.topcan)
+                                    this.tablec.push(can[x])
+                                }
+                            }
+                        }
+                        this.table.push(this.tablet)
+                        this.tablet.push(this.tablex)
+                        this.tablet.push(this.tabley)
+                        this.tablet.push(this.tablec)
+                        this.tablet.push(this.tablexp)
+                        this.tablet.push(this.tableyp)
+                        this.liczba = this.table.length
+                        input.remove()
+                    };
+                }
+            }
+            redo() {
+                if (this.table[this.liczba] != undefined) {
+                    let lew = document.getElementsByClassName("lewy")
+                    let lewcan = lew[0].children[32]
+                    let lewcantop = lewcan.offsetTop
+                    let lewcanleft = lewcan.offsetLeft
+                    for (let x = 0; x < this.table[this.liczba][0].length; x++) {
+                        for (let z = 0; z < lew[0].children.length; z++) {
+                            if (this.table[this.liczba][0][x] == lew[0].children[z].offsetLeft && this.table[this.liczba][1][x] == lew[0].children[z].offsetTop) {
+                                this.table[this.liczba][2][x].getContext("2d").drawImage(lew[0].children[z], 0, 0, this.width, this.height, 0, 0, this.width, this.height);
+                                this.table[this.liczba][2][x].dataset.leftcan = this.table[this.liczba][0][x]
+                                this.table[this.liczba][2][x].dataset.topcan = this.table[this.liczba][1][x]
+                            }
+                        }
+                    }
+                    this.liczba = this.liczba + 1
+                }
+            }
+            esc() {
+                document.getElementById("overlay").style.display = "none";
+                let el = document.getElementsByClassName("cp_h")
+                if (el[0] != undefined) {
+                    for (let i = el.length - 1; i >= 0; i--) {
+                        el[i].classList.remove("cp_h")
+                    }
+                }
+                let ell = document.getElementsByClassName("cp_wklej")
+                if (ell[0] != undefined) {
+                    for (let i = ell.length - 1; i >= 0; i--) {
+                        ell[i].remove()
+                    }
+                    document.removeEventListener("mousemove", this.clicker)
+                }
+            }
+            funkcja(ev) {
+                let potrzebx;
+                let potrzeby;
+                let essa = document.getElementsByClassName("cp")
+                for (let d = 0; d < essa.length; d++) {
+                    if (essa[d].offsetLeft <= ev.pageX - 500 && ev.pageX - 500 <= essa[d].offsetLeft + 25 && essa[d].offsetTop <= ev.pageY - 50 && ev.pageY - 50 <= essa[d].offsetTop + 25) {
+                        potrzebx = essa[d].offsetLeft
+                        potrzeby = essa[d].offsetTop
+                    }
+                }
+                if (this.tablica[2] != undefined) {
+                    let le = this.tablica[2][0]
+                    let to = this.tablica[3][0]
+                    let tarleft = potrzebx
+                    let tartop = potrzeby
+                    for (let x = 0; x < this.tablica[0].length; x++) {
+                        let trleft = this.tablica[2][x] - le
+                        let trtop = this.tablica[3][x] - to
+                        let canvas = document.getElementsByClassName("cp_wklej")
+                        canvas[x].style.left = tarleft + trleft + "px"
+                        canvas[x].style.top = tartop + trtop + "px"
+                        if (canvas[x].offsetLeft >= 0 && canvas[x].offsetTop >= 0 && canvas[x].offsetLeft <= 1315 && canvas[x].offsetTop <= 1050) {
+                            canvas[x].hidden = 0
+                        }
+                        if (canvas[x].offsetLeft < 0 || canvas[x].offsetTop < 0 || canvas[x].offsetLeft > 1315 || canvas[x].offsetTop > 1050) {
+                            canvas[x].hidden = 3
+                        }
+                    }
+                }
+            }
+            paste() {
+                this.clicker = (ev) => this.funkcja(ev)
+                let ell = document.getElementsByClassName("cp_h")
+                for (let i = ell.length - 1; i >= 0; i--) {
+                    ell[i].classList.remove("cp_h");
+                }
+                this.tab = []
+                let can = document.getElementsByClassName("cp_wklej")
+                if (can[0] != undefined) {
+                    for (let i = can.length - 1; i >= 0; i--) {
+                        can[i].remove()
+                    }
+                }
+                let essa = document.getElementsByClassName("cp")
+                let potrzebx1;
+                let potrzeby1;
+                for (let d = 0; d < essa.length; d++) {
+                    if (essa[d].offsetLeft <= this.left1 && this.left1 <= essa[d].offsetLeft + 25 && essa[d].offsetTop <= this.top1 && this.top1 <= essa[d].offsetTop + 25) {
+                        potrzebx1 = essa[d].offsetLeft
+                        potrzeby1 = essa[d].offsetTop
+                        console.log(essa[d])
+                    }
+                }
+                let elss = document.getElementsByClassName("prawy")[0]
+                let els = document.getElementsByClassName("lewy")[0].children
+                if (this.tablica[0] != undefined) {
+                    let le1 = this.tablica[2][0]
+                    let to1 = this.tablica[3][0]
+                    let tarleft1 = potrzebx1
+                    let tartop1 = potrzeby1
+                    for (let x = 0; x < this.tablica[0].length; x++) {
+                        let trleft1 = this.tablica[2][x] - le1
+                        let trtop1 = this.tablica[3][x] - to1
+                        let canvas = document.createElement("canvas");
+                        canvas.width = this.width / 2;
+                        canvas.height = this.height / 2;
+                        canvas.classList.add("cp_wklej");
+                        canvas.style.left = tarleft1 + trleft1 + "px"
+                        canvas.style.top = tartop1 + trtop1 + "px"
+                        for (let y = 0; y < els.length; y++) {
+                            if (els[y].offsetLeft == this.tablica[0][x] && els[y].offsetTop == this.tablica[1][x]) {
+                                let ctx = canvas.getContext("2d");
+                                ctx.drawImage(els[y], 0, 0, this.width, this.height, 0, 0, this.width, this.height);
+                            }
+                        }
+                        elss.appendChild(canvas)
+                    }
+                }
+                document.addEventListener("mousemove", this.clicker)
+                this.tablex = []
+                this.tabley = []
+                this.tablec = []
+                this.tablet = []
+                this.tablexp = []
+                this.tableyp = []
+                if (can[0] != undefined) {
+                    this.table.splice(this.liczba)
+                }
+                const myFunction2 = (ee) => {
+                    let canvas = document.getElementsByClassName("cp_wklej")
+                    let cp = document.getElementsByClassName("cp")
+                    for (let cc = 0; cc < cp.length; cc++) {
+                        for (let dd = 0; dd < canvas.length; dd++) {
+                            if (cp[cc].offsetLeft == canvas[dd].offsetLeft && cp[cc].offsetTop == canvas[dd].offsetTop) {
+                                let ctx = cp[cc].getContext("2d")
+                                this.tablexp.push(cp[cc].dataset.leftcan)
+                                this.tableyp.push(cp[cc].dataset.topcan)
+                                ctx.drawImage(canvas[dd], 0, 0, this.width, this.height, 0, 0, this.width, this.height);
+                                cp[cc].dataset.leftcan = this.tablica[0][dd]
+                                cp[cc].dataset.topcan = this.tablica[1][dd]
+                                this.tablex.push(cp[cc].dataset.leftcan)
+                                this.tabley.push(cp[cc].dataset.topcan)
+                                this.tablec.push(cp[cc])
+                            }
+                        }
+                    }
+                    if (can[0] != undefined) {
+                        this.table.push(this.tablet)
+                        this.tablet.push(this.tablex)
+                        this.tablet.push(this.tabley)
+                        this.tablet.push(this.tablec)
+                        this.tablet.push(this.tablexp)
+                        this.tablet.push(this.tableyp)
+                        this.liczba = this.table.length
+                    }
+                    for (let i = canvas.length - 1; i >= 0; i--) {
+                        canvas[i].remove()
+                    }
+                    document.removeEventListener("mousemove", this.clicker)
+                }
+                document.addEventListener("mousedown", myFunction2);
+                const myFunction3 = (ee) => {
+                    document.removeEventListener("mousedown", myFunction2);
+                }
+                document.addEventListener("mouseup", myFunction3);
+            }
+            copy() {
+                this.tab = []
+                this.tablica = []
+                this.tbx = []
+                this.tby = []
+                this.tbleft = []
+                this.tbtop = []
+                let el = document.getElementsByClassName("cp_h")
+                for (let i = 0; i < el.length; i++) {
+                    this.tbleft.push(el[i].offsetLeft)
+                    this.tbtop.push(el[i].offsetTop)
+                    this.tbx.push(el[i].dataset.leftcan)
+                    this.tby.push(el[i].dataset.topcan)
+                }
+                this.tablica.push(this.tbx)
+                this.tablica.push(this.tby)
+                this.tablica.push(this.tbleft)
+                this.tablica.push(this.tbtop)
+                for (let i = el.length - 1; i >= 0; i--) {
+                    el[i].classList.remove("cp_h");
+                }
+            }
+            cut() {
+                this.tab = []
+                this.tablica = []
+                this.tbx = []
+                this.tby = []
+                this.tbleft = []
+                this.tbtop = []
+                this.tablex = []
+                this.tabley = []
+                this.tablec = []
+                this.tablet = []
+                this.tablexp = []
+                this.tableyp = []
+                let el = document.getElementsByClassName("cp_h")
+                if (el[0] != undefined) {
+                    this.table.splice(this.liczba)
+                }
+                let lew = document.getElementsByClassName("lewy")
+                let lewcan = lew[0].children[32]
+                let lewcantop = lewcan.offsetTop
+                let lewcanleft = lewcan.offsetLeft
+                for (let i = 0; i < el.length; i++) {
+                    let ctx = el[i].getContext("2d")
+                    ctx.drawImage(lewcan, 0, 0, this.width, this.height, 0, 0, this.width, this.height);
+                    this.tbleft.push(el[i].offsetLeft)
+                    this.tbtop.push(el[i].offsetTop)
+                    this.tbx.push(el[i].dataset.leftcan)
+                    this.tby.push(el[i].dataset.topcan)
+                    this.tablexp.push(el[i].dataset.leftcan)
+                    this.tableyp.push(el[i].dataset.topcan)
+                    el[i].dataset.leftcan = lewcanleft
+                    el[i].dataset.topcan = lewcantop
+                    this.tablex.push(el[i].dataset.leftcan)
+                    this.tabley.push(el[i].dataset.topcan)
+                    this.tablec.push(el[i])
+                }
+                if (el[0] != undefined) {
+                    this.table.push(this.tablet)
+                    this.tablet.push(this.tablex)
+                    this.tablet.push(this.tabley)
+                    this.tablet.push(this.tablec)
+                    this.tablet.push(this.tablexp)
+                    this.tablet.push(this.tableyp)
+                    this.liczba = this.table.length
+                }
+                this.tablica.push(this.tbx)
+                this.tablica.push(this.tby)
+                this.tablica.push(this.tbleft)
+                this.tablica.push(this.tbtop)
+                for (let i = el.length - 1; i >= 0; i--) {
+                    el[i].classList.remove("cp_h");
+                }
+            }
+            undo() {
+                if (this.table[this.liczba - 1] != undefined) {
+                    this.liczba = this.liczba - 1
+                    let lew = document.getElementsByClassName("lewy")
+                    let lewcan = lew[0].children[32]
+                    let lewcantop = lewcan.offsetTop
+                    let lewcanleft = lewcan.offsetLeft
+                    for (let x = 0; x < this.table[this.liczba][0].length; x++) {
+                        for (let z = 0; z < lew[0].children.length; z++) {
+                            if (this.table[this.liczba][3][x] == lew[0].children[z].offsetLeft && this.table[this.liczba][4][x] == lew[0].children[z].offsetTop) {
+                                this.table[this.liczba][2][x].getContext("2d").drawImage(lew[0].children[z], 0, 0, this.width, this.height, 0, 0, this.width, this.height);
+                                this.table[this.liczba][2][x].dataset.leftcan = this.table[this.liczba][3][x]
+                                this.table[this.liczba][2][x].dataset.topcan = this.table[this.liczba][4][x]
+                            }
+                        }
+                    }
+                }
+            }
+            delete() {
+                this.tab = []
+                this.tablex = []
+                this.tabley = []
+                this.tablec = []
+                this.tablet = []
+                this.tablexp = []
+                this.tableyp = []
+                let el = document.getElementsByClassName("cp_h")
+                if (el[0] != undefined) {
+                    this.table.splice(this.liczba)
+                }
+                let lew = document.getElementsByClassName("lewy")
+                let lewcan = lew[0].children[32]
+                let lewcantop = lewcan.offsetTop
+                let lewcanleft = lewcan.offsetLeft
+                for (let i = 0; i < el.length; i++) {
+                    let ctx = el[i].getContext("2d")
+                    this.tablexp.push(el[i].dataset.leftcan)
+                    this.tableyp.push(el[i].dataset.topcan)
+                    ctx.drawImage(lewcan, 0, 0, this.width, this.height, 0, 0, this.width, this.height);
+                    el[i].dataset.leftcan = lewcanleft
+                    el[i].dataset.topcan = lewcantop
+                    this.tablex.push(el[i].dataset.leftcan)
+                    this.tabley.push(el[i].dataset.topcan)
+                    this.tablec.push(el[i])
+                }
+                if (el[0] != undefined) {
+                    this.table.push(this.tablet)
+                    this.tablet.push(this.tablex)
+                    this.tablet.push(this.tabley)
+                    this.tablet.push(this.tablec)
+                    this.tablet.push(this.tablexp)
+                    this.tablet.push(this.tableyp)
+                    this.liczba = this.table.length
+                }
+                console.log(this.table)
+                for (let i = el.length - 1; i >= 0; i--) {
+                    el[i].classList.remove("cp_h");
+                }
+            }
+            generuj_lewa() {
+                let div1 = document.createElement("div");
+                div1.className = "lewy"
+                document.body.appendChild(div1);
+                for (let i = 0; i < 40; i++) {
+                    for (let j = 0; j < 16; j++) {
+                        let canvas = document.createElement("canvas");
+                        let ctx = canvas.getContext("2d");
+                        canvas.classList = "lewa";
+                        canvas.width = this.width / 2;
+                        canvas.height = this.height / 2;
+                        canvas.onclick = (e) => {
+                            this.tablex = []
+                            this.tabley = []
+                            this.tablec = []
+                            this.tablet = []
+                            this.tablexp = []
+                            this.tableyp = []
+                            let els = document.getElementsByClassName("cp_h");
+                            let els1 = document.getElementsByClassName("cp")
+                            let els2;
+                            let lewcantop = e.target.offsetTop
+                            let lewcanleft = e.target.offsetLeft
+                            this.table.splice(this.liczba)
+                            //add_class
+                            this.table.push(this.tablet)
+                            for (let i = 0; i < els.length; i++) {
+                                var ctx = els[i].getContext("2d");
+                                this.tablexp.push(els[i].dataset.leftcan)
+                                this.tableyp.push(els[i].dataset.topcan)
+                                els[i].dataset.leftcan = lewcanleft
+                                els[i].dataset.topcan = lewcantop
+                                this.tablex.push(els[i].dataset.leftcan)
+                                this.tabley.push(els[i].dataset.topcan)
+                                this.tablec.push(els[i])
+                                ctx.drawImage(e.target, 0, 0, this.width, this.height, 0, 0, this.width, this.height);
+                            }
+                            this.tablet.push(this.tablex)
+                            this.tablet.push(this.tabley)
+                            this.tablet.push(this.tablec)
+                            this.tablet.push(this.tablexp)
+                            this.tablet.push(this.tableyp)
+                            this.liczba = this.table.length
+                            //automat
+                            if (document.getElementById("check").checked == true) {
+                                let lg = els.length - 1
+                                for (let i = 0; i < document.getElementsByClassName("cp").length; i++) {
+                                    if (els1[i] == els[lg]) {
+                                        els2 = i
+                                    }
+                                }
+                            }
+                            //remove_class
+                            for (let i = els.length - 1; i >= 0; i--) {
+                                els[i].classList.remove("cp_h");
+                            }
+                            //automat
+                            if (document.getElementById("check").checked == true) {
+                                if (els2 != undefined) {
+                                    els1[els2 + 1].classList.add("cp_h");
+                                }
+                            }
+                            //tablica do przechowywania elementów (hovery)
+                            this.tab = []
+                        }
+                        ctx.drawImage(this.img, j * this.width, i * this.height, this.width, this.height, 0, 0, this.width / 2, this.height / 2);
+                        ctx.drawImage(this.img, 768 + j * this.width, -960 + i * this.height, this.width, this.height, 0, 0, this.width / 2, this.height / 2);
+                        div1.appendChild(canvas);
+                    }
+                }
+            }
+            generuj_prawa() {
+                let div2 = document.createElement("div");
+                div2.className = "prawy"
+                document.body.appendChild(div2);
+                let lew = document.getElementsByClassName("lewy")
+                let lewcan = lew[0].children[32]
+                let lewcantop = lewcan.offsetTop
+                let lewcanleft = lewcan.offsetLeft
+                for (let i = 0; i < 47; i++) {
+                    for (let j = 0; j < 38; j++) {
+                        let canvas = document.createElement("canvas");
+                        let ctx = canvas.getContext("2d");
+                        canvas.width = this.width / 2;
+                        canvas.height = this.height / 2;
+                        canvas.classList.add("cp");
+                        ctx.drawImage(lewcan, 0, 0, this.width, this.height, 0, 0, this.width, this.height);
+                        canvas.dataset.leftcan = lewcanleft
+                        canvas.dataset.topcan = lewcantop
+                        div2.appendChild(canvas);
+                    }
+                }
+                this.plachta()
+            }
+            plachta() {
+                let els = document.getElementsByClassName("cp_h");
+                let div2 = document.getElementsByClassName("prawy")
+                var div = document.getElementById('div'), x1 = 0, y1 = 0, x2 = 0, y2 = 0;
+                function reCalc() {
+                    var x3 = Math.min(x1, x2);
+                    var x4 = Math.max(x1, x2);
+                    var y3 = Math.min(y1, y2);
+                    var y4 = Math.max(y1, y2);
+                    div.style.left = x3 + 'px';
+                    div.style.top = y3 + 'px';
+                    div.style.width = x4 - x3 + 'px';
+                    div.style.height = y4 - y3 + 'px';
+                }
+                document.onmousedown = (ee) => {
+                    let us = ee.target
+                    if (ee.target.className != "lewa" && ee.button == "0" && ee.target.id != "overlay" && ee.target.className != "mniejsze" && ee.target.className != "mniejsze1") {
+                        if (this.zmienna == false) {
+                            for (let i = els.length - 1; i >= 0; i--) {
+                                els[i].classList.remove("cp_h");
+                            }
+                            this.tab = []
+                        }
+                    }
+                    if (ee.button == "0" && ee.target.className != "lewa" && ee.target.id != "overlay" && ee.target.className != "mniejsze" && ee.target.className != "mniejsze1") {
+                        div.hidden = 0;
+                        x1 = ee.pageX;
+                        y1 = ee.pageY;
+                        x2 = ee.pageX;
+                        y2 = ee.pageY;
+                        reCalc();
+                    }
+                    let jd = ee.target
+                    if (jd.classList[1] == "cp_h") {
+                        if (ee.button == "0" && ee.target.className != "lewa" && ee.target.id != "overlay" && ee.target.className != "mniejsze" && ee.target.className != "mniejsze1") {
+                            jd.classList.remove("cp_h")
+                            for (let i = 0; i < this.tab.length; i++) {
+                                if (this.tab[i] == jd) {
+                                    this.tab.splice(i, 1)
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        const myFunction = (ev) => {
+                            if (ev.button == "0" && ev.target.className != "lewa" && ev.target.id != "overlay" && ev.target.className != "mniejsze" && ev.target.className != "mniejsze1") {
+                                x2 = ev.pageX;
+                                y2 = ev.pageY;
+                                reCalc();
+                                for (let i = els.length - 1; i >= 0; i--) {
+                                    els[i].classList.remove("cp_h");
+                                }
+                                if (this.zmienna == true) {
+                                    for (let x = 0; x < this.tab.length; x++) {
+                                        this.tab[x].classList.add("cp_h")
+                                    }
+                                }
+                                let prawy = document.getElementsByClassName("prawy")[0].children.length
+                                for (var a = 0; a < prawy; a++) {
+                                    let left = document.getElementsByClassName("prawy")[0].children[a].offsetLeft
+                                    let top = document.getElementsByClassName("prawy")[0].children[a].offsetTop
+                                    if (left + 26 > x1 - 500 && left - 1 < x2 - 500 && top + 26 > y1 - 50 && top - 1 < y2 - 50 || left + 26 > x2 - 500 && left - 1 < x1 - 500 && top + 26 > y2 - 50 && top - 1 < y1 - 50 || left + 26 > x1 - 500 && left - 1 < x2 - 500 && top + 26 > y2 - 50 && top - 1 < y1 - 50 || left + 26 > x2 - 500 && left - 1 < x1 - 500 && top + 26 > y1 - 50 && top - 1 < y2 - 50) {
+                                        document.getElementsByClassName("prawy")[0].children[a].classList.add("cp_h")
+                                    }
+                                }
+                            }
+                            ev.preventDefault();
+                        };
+                        if (ee.button == "0" && ee.target.className != "lewa" && ee.target.id != "overlay" && ee.target.className != "mniejsze" && ee.target.className != "mniejsze1") {
+                            document.addEventListener("mousemove", myFunction);
+                        }
+                        const myFunctionn = (e) => {
+                            if (e.button == "0" && e.target.className != "lewa" && e.target.id != "overlay" && e.target.className != "mniejsze" && e.target.className != "mniejsze1" && e.target.className != "cp_wklej") {
+                                div.hidden = 1;
+                                let prawy = document.getElementsByClassName("prawy")[0]
+                                for (var a = 0; a < prawy.children.length; a++) {
+                                    if (prawy.children[a].classList != "cp_h") {
+                                        let left = document.getElementsByClassName("prawy")[0].children[a].offsetLeft
+                                        let top = document.getElementsByClassName("prawy")[0].children[a].offsetTop
+                                        if (left + 26 > x1 - 500 && left - 1 < x2 - 500 && top + 26 > y1 - 50 && top - 1 < y2 - 50 || left + 26 > x2 - 500 && left - 1 < x1 - 500 && top + 26 > y2 - 50 && top - 1 < y1 - 50 || left + 26 > x1 - 500 && left - 1 < x2 - 500 && top + 26 > y2 - 50 && top - 1 < y1 - 50 || left + 26 > x2 - 500 && left - 1 < x1 - 500 && top + 26 > y1 - 50 && top - 1 < y2 - 50) {
+                                            document.getElementsByClassName("prawy")[0].children[a].classList.add("cp_h")
+                                            if (us.className != "cp_wklej") {
+                                                this.tab.push(document.getElementsByClassName("prawy")[0].children[a])
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            if (e.button == "0") {
+                                document.getElementById("overlay").style.display = "none";
+                            }
+                            e.preventDefault();
+                            if (us.className == "cp_wklej") {
+                                for (let i = els.length - 1; i >= 0; i--) {
+                                    els[i].classList.remove("cp_h");
+                                }
+                            }
+                            document.removeEventListener("mousemove", myFunction);
+                        };
+                        document.addEventListener("mouseup", myFunctionn)
+                        const myFunctionnn = (e) => {
+                            document.removeEventListener("mouseup", myFunctionn);
+                        }
+                        document.addEventListener("mouseup", myFunctionnn)
+                        ee.preventDefault();
+                    }
+                };
+                document.oncontextmenu = function (ev) {
+                    if (ev.button == "2") {
+                        document.getElementById("overlay").style.display = "flex";
+                    }
+                    ev.preventDefault();
+                }
+            }
+        }
+        window.addEventListener('DOMContentLoaded', (event) => {
+            let img = new Image();
+            img.src = "sprites.png"
+            img.onload = function () {
+                new Generator(this, 48, 48);
+            }
+        });
+    </script>
+</body>
+
+</html>
